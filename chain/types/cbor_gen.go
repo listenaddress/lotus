@@ -565,6 +565,8 @@ func (t *EPostTicket) UnmarshalCBOR(r io.Reader) error {
 }
 
 func (t *Message) MarshalCBOR(w io.Writer) error {
+	fmt.Printf("\n unint %v", uint64(t.Nonce))
+	fmt.Printf("\n bg.CborEncodeMajorType(cbg.MajUnsignedInt, uint64(t.Nonce) %v", cbg.CborEncodeMajorType(cbg.MajUnsignedInt, uint64(t.Nonce)))
 	if t == nil {
 		_, err := w.Write(cbg.CborNull)
 		return err
@@ -587,7 +589,7 @@ func (t *Message) MarshalCBOR(w io.Writer) error {
 	if _, err := w.Write(cbg.CborEncodeMajorType(cbg.MajUnsignedInt, uint64(t.Nonce))); err != nil {
 		return err
 	}
-
+	fmt.Println("after nonce")
 	// t.Value (types.BigInt) (struct)
 	if err := t.Value.MarshalCBOR(w); err != nil {
 		return err
@@ -609,16 +611,16 @@ func (t *Message) MarshalCBOR(w io.Writer) error {
 	}
 
 	// t.Params ([]uint8) (slice)
-	if len(t.Params) > cbg.ByteArrayMaxLen {
-		return xerrors.Errorf("Byte array in field t.Params was too long")
-	}
+	// if len(t.Params) > cbg.ByteArrayMaxLen {
+	// 	return xerrors.Errorf("Byte array in field t.Params was too long")
+	// }
 
-	if _, err := w.Write(cbg.CborEncodeMajorType(cbg.MajByteString, uint64(len(t.Params)))); err != nil {
-		return err
-	}
-	if _, err := w.Write(t.Params); err != nil {
-		return err
-	}
+	// if _, err := w.Write(cbg.CborEncodeMajorType(cbg.MajByteString, uint64(len(t.Params)))); err != nil {
+	// 	return err
+	// }
+	// if _, err := w.Write(t.Params); err != nil {
+	// 	return err
+	// }
 	return nil
 }
 
@@ -723,6 +725,7 @@ func (t *Message) UnmarshalCBOR(r io.Reader) error {
 }
 
 func (t *SignedMessage) MarshalCBOR(w io.Writer) error {
+
 	if t == nil {
 		_, err := w.Write(cbg.CborNull)
 		return err

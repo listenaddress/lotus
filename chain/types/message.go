@@ -2,7 +2,9 @@ package types
 
 import (
 	"bytes"
+	"encoding/binary"
 	"fmt"
+	"strconv"
 
 	block "github.com/ipfs/go-block-format"
 	"github.com/ipfs/go-cid"
@@ -40,6 +42,13 @@ func (m *Message) Serialize() ([]byte, error) {
 	if err := m.MarshalCBOR(buf); err != nil {
 		return nil, err
 	}
+	b := make([]byte, 8)
+	binary.LittleEndian.PutUint64(b, uint64(m.Nonce))
+
+	fmt.Printf("\n byes %v", []byte(strconv.FormatUint(m.Nonce, 10)))
+
+	fmt.Printf("\n buf %v", buf.Bytes())
+	fmt.Printf("\n buf %v", buf.Bytes())
 	return buf.Bytes(), nil
 }
 
